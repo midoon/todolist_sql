@@ -3,25 +3,26 @@
 require_once __DIR__."/../entity/TodoList.php";
 require_once __DIR__."/../repository/TodoListRepository.php";
 require_once __DIR__."/../service/TodoListService.php";
+require_once __DIR__."/../config/Database.php";
 
 use Service\TodoListServiceImpl;
 use Repository\TodoListRepositoryImpl;
 use Entity\TodoList;
 
 function testShowTodoList(): void{
-    $todoListRepository = new TodoListRepositoryImpl();
-
-    $todoListRepository->todoList[1] = new TodoList("PHP");
-    $todoListRepository->todoList[2] = new TodoList("JAVA");
-    $todoListRepository->todoList[3] = new TodoList("GO");
+    $connection = \Config\Database::getConnection();
+    $todoListRepository = new TodoListRepositoryImpl($connection);
     $todoListService = new TodoListServiceImpl($todoListRepository);
+
+    
 
     $todoListService->showTodoList();
 }
 
 
 function testAddTodoList(): void{
-    $todoListRepository = new TodoListRepositoryImpl();
+    $connection = \Config\Database::getConnection();
+    $todoListRepository = new TodoListRepositoryImpl($connection);
     $todoListService = new TodoListServiceImpl($todoListRepository);
 
     $todoListService->addTodoList("PHP");
@@ -32,19 +33,16 @@ function testAddTodoList(): void{
 
 
 function testRemoveTodoList(): void{
-    $todoListRepository = new TodoListRepositoryImpl();
+
+    $connection = \Config\Database::getConnection();
+    $todoListRepository = new TodoListRepositoryImpl($connection);
     $todoListService = new TodoListServiceImpl($todoListRepository);
 
-    $todoListService->addTodoList("PHP");
-    $todoListService->addTodoList("JAVA");
-    $todoListService->addTodoList("GO");
-    $todoListService->addTodoList("JS");
+    echo $todoListService->removeTodoList(5) . PHP_EOL;
+    echo $todoListService->removeTodoList(4) . PHP_EOL;
+    echo $todoListService->removeTodoList(1) . PHP_EOL;
 
-    $todoListService->showTodoList();
-
-    $todoListService->removeTodoList(2);
-    $todoListService->showTodoList();
 
 }
 
-testRemoveTodoList();
+testShowTodoList();
